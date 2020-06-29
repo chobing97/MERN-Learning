@@ -1,4 +1,4 @@
-Initialize express packages with 'npm'
+Initialize express with 'npm'
 
 $ npm init
 $ npm install express --save

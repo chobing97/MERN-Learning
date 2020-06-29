@@ -1,0 +1,69 @@
+- 최신 React 경향은 class 형 component보다는 function 형 component를 선호한다.
+
+- hook: 간접적으로 state에 영향을 미쳐 UI component들을 다시 그려주게끔 하는 것
+ : useState: state 초기화, getter, setter를 자동생성해 주며, object형 업데이트 시에는 setter에 함수를 넘겨 주어 업데이트가 동시에 여러 군데에서 발생하면 순차적으로 업데이트 되도록 해 준다.
+   const [showMap, setShowMap] = useState(false);
+   const [courseGoals, setCourseGoals] = useState(['goal1', 'goal2', 'goal3']);
+   ...
+   setCourseGoals(prevCourseGoals => prevCourseGoals.concat(newGoal));
+
+ : useReducer- 한번에 여러 state를 업데이트 할 수 있도록 함
+   const [inputState/* state */, dispatch/* action => {} */] = useReducer(inputReducer /* (state, action) => {} */, {...} /* initial state */);
+
+ : useEffect- 특정 value가 변할 때에 effect 함수가 불리게 함
+   useEffect(() => { onInput(id, value, isValid) }, [id, value, isValid, onInput]);
+
+ : useRef- function형 component 구조 상 JSX 가 선언되기 전에 javascript 가 실행되므로 html component가 DOM에 생성되기 전이다. 이때 특정 html component에 접근할 필요가 있을 대 사용함
+   const mapRef = useRef();
+   ... { target: mapRef.current.id, ...}
+   return <div ref={mapRef} ...> </div>
+
+ : useCallback- callback 함수를 그냥 만들면 동일한 기능을 하는 callback 함수도 component마다 따로 만들어 지므로 동일 callback은 cache(memoization)된 버전으로 공통적으로 쓸 수 있도록 해주는 hook
+   Const inputHandler = useCallback((id, value, isValid) => { ... }, []);
+
+ * React native hook을 이용하여 custom hook 구현 가능함
+
+ * hook 은 if, callback 등 다른 code block 내에서 실행해서는 안되고 반드시 component function 내에서 직접 실행해야 한다. ==> 왜 그럴까?
+
+ * useState, useReducer 등의 hook은 function style component에서만 지원되며, class 형 component용 hook은 별도로 지원한다.
+
+ * useParams: 이건 hook으로 볼수는 없는 듯. URL param을 받아오는 기능.
+   const placeId = useParams().placeId;
+
+- Form 구현은 Formik 을 사용하면 좋다.
+
+- Component는 dumb한 presentational component와 데이터 처리 로직이 구현된 stateful component로 나눌 수 있다. 대부분의 component를 presentational 하게 구현하고, 일부 핵심 component를 stateful 하게 구현한다.
+
+- SPA(Single Page Application)에서는 App.js에 Router를 이용하여 페이지별 이동을 구현한다. 기본 구조는 다음과 같다.
+const App = () => {
+  return (
+    <Router>
+      <main>
+        <Switch>
+          <Route path="/" exact> ... </Route>
+          <Route path="/:userId/paces"> ... </Route>
+          <Route path="/places/:placeId> ... </Route>  
+...
+
+- useContext: 로그인 정보 등 모든 페이지에서 참조해야 하는 값들이 있을 경우, 이를 props로 일일히 넘겨 주기는 곤란하다. 이럴 때 사용하는 것이 context
+  -- auth-context.js
+   import { createContext } from 'react';
+   export const AuthContext = createContext({
+     isLoggedIn: false,
+     Login: () => {},
+     Logout: () => {},
+   });
+  -- App.js
+   import { AuthContext } from '...';
+   const App = () => {
+   // ... define isLoggedIn, login func, logout func
+   return (
+     <AuthContext.Provider value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}>
+       <Router> ... </Router>
+     </AuthContext.Provider>
+  -- Auth.js
+   Import { useContext } from 'react';
+   import { AuthContext } from '...';
+   const Auth = () => {
+     const auth = useContext(AuthContext);
+     ...

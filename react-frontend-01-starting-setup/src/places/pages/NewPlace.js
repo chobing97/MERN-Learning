@@ -10,20 +10,23 @@ import { useForm } from "../../shared/hooks/form-hook";
 import "./PlaceForm.css";
 
 const NewPlace = () => {
-  const [formState, inputHandler] = useForm({
-    title: {
-      value: "",
-      isValid: false,
+  const [formState, inputHandler] = useForm(
+    {
+      title: {
+        value: "",
+        isValid: false,
+      },
+      description: {
+        value: "",
+        isValid: false,
+      },
+      address: {
+        value: "",
+        isValid: false,
+      },
     },
-    description: {
-      value: "",
-      isValid: false,
-    },
-    address: {
-      value: "",
-      isValid: false,
-    },
-  });
+    false
+  );
   const placeSubmitHandler = (event) => {
     event.preventDefault();
     console.log(formState.inputs); // send this to backend!

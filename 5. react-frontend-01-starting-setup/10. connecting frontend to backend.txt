@@ -1,0 +1,14 @@
+- localhost:3000(React frontend) -> localhost:5000(node.js) 호출 시 (fetch()) CORS security 에러 발생함
+ : CORS는 browser 단 보안 컨셉이며 backend와 무관한다.
+
+ : browser는 해당 서버에 처음에 OPTIONS method로 한번 찔러보고, 서버가 허용하는 header message를 보내면 다음에 정식 request를 보낸다.
+    -> OPTIONS /api/users/signup {} {}
+    -> POST /api/users/signup {} { name: 'BC4', email: 'test4@test.com', password: 'password4' }
+
+ : 따라서, backend 서버에서 다음과 같이 header를 설정해 주면 이 에러를 비켜갈 수 있다.
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")

@@ -1,9 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const placesRoutes = require("./routes/places-routes");
-const usersRoutes = require('./routes/users-routes');
+const usersRoutes = require("./routes/users-routes");
 const HttpError = require("./models/http-error");
+
+const password = require("./password");
+const url = `mongodb+srv://chobing97:${password}@cluster0.8hpp0.mongodb.net/places?retryWrites=true&w=majority`;
+
 
 const app = express();
 
@@ -13,8 +18,8 @@ app.use("/api/places", placesRoutes); // =. /api/places/...
 app.use("/api/users", usersRoutes);
 
 app.use((req, res, next) => {
-    const error = new HttpError('Could not find this route.', 400);  // Bad Request
-    throw error;
+  const error = new HttpError("Could not find this route.", 400); // Bad Request
+  throw error;
 });
 
 app.use((error, req, res, next) => {
@@ -29,4 +34,11 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error occurred!" });
 });
 
-app.listen(5000);
+mongoose
+  .connect(url)
+  .then(() => {
+    app.listen(5000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });

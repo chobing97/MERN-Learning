@@ -1,0 +1,41 @@
+- Express server app structure
+
+app.js
+  \- routes
+    \- places-routes.js
+    \- ...
+  \- controllers
+    \- places-controllers.js
+    \- ...
+  \- models
+    \- http-error.js
+    \- ...
+
+
+- Express Validator
+ : https://express-validator.github.io/docs/
+
+ : Validator is a kind of middle ware
+ : Define the validator middle ware in routers and check the result in controller
+
+  -- places-routes.js
+  router.post(
+    "/",
+    [
+      check("title").not().isEmpty(),
+      check("description").isLength({ min: 5 }),
+      check("address").not().isEmpty(),
+    ],
+    placesControllers.createPlace
+  );
+
+  -- places-controllers.js
+  const createPlace = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      throw new HttpError("Invalid inputs passed, please check your data.", 422); // 422: Unprocessable Entity
+    }
+
+- Google Geocoding API
+ : https://developers.google.com/maps/documentation/geocoding/start

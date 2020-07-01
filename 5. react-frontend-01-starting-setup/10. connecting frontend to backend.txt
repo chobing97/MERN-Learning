@@ -12,3 +12,17 @@
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
+
+- useRef hook은 static으로 간주할 수 있다.
+  Const arr = useRef([]);
+  와 같이 정의하면 전체 component가 다시 로드 되더라도 값이 유지된다.
+
+- useEffect를 clean up 으로 활용하는 방법
+  the function returned by in-useEffect function is called as a clean up function
+  before next useEffect call or the component which uses useEffect unmounts
+
+  useEffect(() => {
+    return () => {
+      activeHttpRequests.current.forEach((abortCtrl) => abortCtrl.abort());
+    };
+  }, []);

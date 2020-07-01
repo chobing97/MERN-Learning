@@ -1,0 +1,5 @@
+- html를 서버에서 templating 하는 이전 방식에서는 서버에서 session을 관리하고, client에는 cookie로 session id를 기억하는 방식으로 authentication 이 작동했다.
+- SPA(Single Page Application) 방식에서는 stateless & decoupled from frontend
+- SPA에서는 token을 생성하고, client는 이를 Cookie 또는 localStorage에 저장하여 사용함
+- 서버에서는 token을 private key로 암호화하여 client에 전송하여 token 위변조를 방지함
+- token 생성은 JWT (JSON Web Tokens) 방식을 사용함 (https://jwt.io/)

@@ -1,1 +1,3 @@
 - express 에서 multipart 데이터 처리를 위해 multer library를 사용한다.
+- frontend에서 backend 호출 시에는 JSON 포맷 대신 FormData() 객체를 fetch() 함수를 사용하여 POST로 전송한다.
+- FormData() 함수는 browser 단의 javascript 함수

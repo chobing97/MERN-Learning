@@ -27,6 +27,7 @@ const signup = async (req, res, next) => {
     ); // 422: Unprocessable Entity
   }
   const { name, email, password } = req.body;
+  console.log(req.body);
 
   let existingUser;
   try {
@@ -50,8 +51,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    image:
-      "https://lh3.googleusercontent.com/ogw/ADGmqu9qCgrDyJghqs4xIDt_xIsp90pT_J7O3D6h6nC_=s32-c-mo",
+    image: req.file.path,
     password,
     places: [],
   });

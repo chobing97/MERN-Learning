@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -12,6 +15,8 @@ const url = `mongodb+srv://chobing97:${password}@cluster0.8hpp0.mongodb.net/mern
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.originalUrl}`, req.params, req.body);
@@ -36,6 +41,11 @@ app.use((error, req, res, next) => {
   // middle ware funtion의 argument가 4개 주어지면 첫번째는 error 이고, express는
   // 이를 error handling middle ware로 인식한다.
   // 앞선 middle ware 에서 에러를 던지면 여기로 들어온다.
+  if (req.file) {
+    fs.unlink(req.file.path, (err) => {
+      console.log(err);
+    });
+  }
   console.log("Error Handler: " + error.code, error.message);
   if (res.headerSent) {
     return next(error);

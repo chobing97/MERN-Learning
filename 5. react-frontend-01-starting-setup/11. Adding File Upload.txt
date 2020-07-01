@@ -1,0 +1,1 @@
+- express 에서 multipart 데이터 처리를 위해 multer library를 사용한다.

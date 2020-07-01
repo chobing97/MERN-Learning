@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const { v4: uuid } = require("uuid");
 const { validationResult } = require("express-validator");
 
@@ -97,6 +99,7 @@ const createPlace = async (req, res, next) => {
   // const title = req.body.title;
   // ...
   const { title, description, address, creator } = req.body;
+  console.log(req.body);
 
   let coordinates;
   try {
@@ -110,8 +113,7 @@ const createPlace = async (req, res, next) => {
     description,
     location: coordinates,
     address,
-    image:
-      "https://lh5.googleusercontent.com/p/AF1QipNJJwAmxZD8gIx2J0PZtXTHaCR-23zPvSc8p9s=w408-h544-k-no",
+    image: req.file.path,
     creator,
   });
 
@@ -210,6 +212,12 @@ const deletePlace = async (req, res, next) => {
     );
     return next(error);
   }
+
+  // delete the saved image
+  const imagePath = place.image;
+  fs.unlink(imagePath, (err) => {
+    console.log(err);
+  });
 
   res.status(200).json({ message: "Deleted place." });
 };

@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const multer = require("multer");
 const { v4: uuid } = require("uuid");
 
@@ -12,8 +14,12 @@ const fileUpload = multer({
   limits: 500000,
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
+      const path = "uploads/images";
+      if (!fs.existsSync(path)) {
+        fs.mkdirSync(path, { recursive: true });
+      }
       console.log("multer.diskStorage.destination");
-      cb(null, "uploads/images");
+      cb(null, path);
     },
     filename: (req, file, cb) => {
       console.log("multer.diskStorage.filename");

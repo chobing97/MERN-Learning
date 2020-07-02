@@ -1,0 +1,46 @@
+- node.js, REACT 모두 global config 는 process.env 를 이용함
+
+- node.js: dev용 config는 nodemon.json 파일 내에 "env" object 생성
+  {
+    "env": {
+      "DB_USER": "...",
+      "DB_PASSWORD": "...",
+      ...
+    }
+  }
+
+- REACT: .env 파일을 project root에 생성함. Config 명은 REACT_APP_으로 시작해야 함
+  REACT_APP_GOOGLE_API_KEY=...
+  REACT_APP_BACKEND_URL=http://...
+
+- REACT build: nom run build
+  -> minify 실행됨
+  -> build folder 생성됨
+
+- REACT split: component를 import 시키는 방식을 바꿔서 각각의 component가 필요할 때 lazy loading 하는 방식으로 동작하여
+ 초기에 로딩하는 react code를 최소화 시킬 수 있다.
+
+  import Users from "./user/pages/Users";
+  import NewPlace from "./places/pages/NewPlace";
+
+ ==> 
+  const Users = React.lazy(() => import("./user/pages/Users");
+  const NewPlace = React.lazy(() => import("./places/pages/NewPlace");
+
+- 2 Options for deployment
+ 1. Deploy 2 separated apps : react app, node REST API
+   React: static host(html, css, js) using AWS S3, Firebase Hosting,...
+   Node.js: node.js host using AWS EC2/EB, Heroku,...
+   * CORS headers are absolutely required!
+
+   - production 에서는 nodemon 을 사용하지 않고 node를 사용함
+   - frontend는 build후 static 하게 사용 가능하므로 file server 등에서 서비스 할 수 있음
+   - backend는 EC2 등의 hosting 서버를 이용함
+
+ 2. Node REST API which renders the React App
+  Node.js host using AWS EC2/EB, Heroku
+   * CORS headers are not required!
+
+   - frontend를 build 후 (npm run build) build 폴더를 통째로 backend /public 폴더로 복사함
+   - backend app.js 에 public static route를 추가함
+ 
